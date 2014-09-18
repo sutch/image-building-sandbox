@@ -127,7 +127,63 @@ vagrant box remove ubuntu-14.04-apache
 Other notes
 -----------
 
+To be integrated into instructions above:
+
 Install Puppet module for Apache from Puppet Forge (to HOME/puppet):
 ```
 puppet module install puppetlabs-apache
 ```
+
+
+Test run of process
+-------------------
+
+  1. Clone the repository
+```
+git clone https://github.com/sutch/image-building-sandbox.git
+```
+  2. Install Apache module from Puppet Forge:
+```
+puppet module install puppetlabs-apache
+```
+  3. Change working directory to image-building-sandbox
+  4. Build the basic image
+```
+packer build -only=ubuntu-14.04.amd64.virtualbox ubuntu-14.04.json
+```
+This creates a basic image as a Vagrant box in the build directory and as an OVF file in the output-ubuntu-14.04.amd64.virtualbox directory.
+  5. Edit source_path in ubuntu-14.04-apache.json to use the OVF file found in the output-ubunt-14.04.amd64.virtualbox directory (the timestamp changes at each build).
+  6. Build the image containing Apache using Puppet
+```
+packer build ubuntu-14.04-apache.json
+```
+  7. Initialize Vagrantfile for new image (box)
+```
+vagrant init ubuntu-14.04-apache build/ubuntu-14.04.amd64.apache.virtualbox.box  
+```
+  8. Run vitual machine
+```
+vagrant up
+```
+  9. SSH to virtual machine
+```
+vagrant ssh
+```
+This will create an SSH session to the virtual machine.
+  10. Test things on virtual machine (list contents of shared folder; check status of apache service; logout and end SSH session)
+```
+ls /vagrant
+/etc/init.d/apache2 status
+exit
+```
+  11. Halt virtual machine; destroy virtual machine; remove box from Vagrant
+```
+vagrant halt
+vagrant destroy
+vagrant box remove ubuntu-14.04-apache
+```
+
+Todo
+----
+
+  * Cache apt-get updates.
