@@ -1,0 +1,29 @@
+{
+  "builders": [
+    {
+      "name": "ubuntu-14.04.amd64.apache.virtualbox",
+      "type": "virtualbox-ovf",
+      "source_path": "output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox-1411007056.ovf",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "30s",
+      "shutdown_command": "echo 'vagrant' | sudo -S -E shutdown -P now"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "puppet-masterless",
+      "manifest_file": "puppet/site.pp",
+      "module_paths": [
+        "/Users/sutch/.puppet/modules/"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "output": "build/{{.BuildName}}.box",
+      "keep_input_artifact": true
+    }
+  ]
+}

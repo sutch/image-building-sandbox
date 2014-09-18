@@ -3,3 +3,10 @@ packer_cache/
 
 # For built boxes
 *.box
+
+.DS_Store
+/.vagrant
+/box
+/dev
+/Vagrantfile
+
