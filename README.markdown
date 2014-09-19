@@ -38,14 +38,11 @@ For Mac OS X, Brew does not contain the latest version. Use the following instru
 
   1. download from http://www.packer.io/downloads.html
   2. extract to the /usr/local/packer directory
-  3. update ~/.profile to include the line
-   ```
-   export PATH=$PATH:/usr/local/packer
-   ```
+  3. update ~/.bash_profile to include the line: `export PATH=$PATH:/usr/local/packer`
   4. execute the following command to source the .profile file to to effect for the current session
-   ```
-   . ~/.bash_profile
-   ```
+```
+. ~/.bash_profile
+```
 
 ### Download and install Puppet and Facter
 
@@ -186,4 +183,5 @@ vagrant box remove ubuntu-14.04-apache
 Todo
 ----
 
+  * Resolve Packer message: Warning: Config file /etc/puppet/hiera.yaml not found, using Hiera defaults
   * Cache apt-get updates.
