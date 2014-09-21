@@ -21,12 +21,13 @@ Prerequistites
 --------------
 
   1. internet connectivity -- to obtain ISOs and system updates
-  2. VirtualBox -- to build (and run) images
-  3. Packer -- to manage the building of images
-  4. Vagrant -- to manage images (boxes)
-  5. Git client
-  6. SSH client
-  7. text editor
+  1. VirtualBox -- to build (and run) images
+  1. Packer -- to manage the building of images
+  1. Vagrant -- to manage images (boxes)
+  1. Vagrant Host Manager plugin
+  1. Git client
+  1. SSH client
+  1. text editor
 
 ### Download and install VirtualBox
 
@@ -37,12 +38,15 @@ See https://www.virtualbox.org/wiki/Downloads
 For Mac OS X, Brew does not contain the latest version. Use the following instructions.
 
   1. download from http://www.packer.io/downloads.html
-  2. extract to the /usr/local/packer directory
-  3. update ~/.bash_profile to include the line: `export PATH=$PATH:/usr/local/packer`
-  4. execute the following command to source the .profile file to to effect for the current session
-```
-. ~/.bash_profile
-```
+  1. extract to the /usr/local/packer directory
+  1. update ~/.bash_profile to include the line
+     ```
+     export PATH=$PATH:/usr/local/packer
+     ```
+  1. execute the following command to source the .profile file to to effect for the current session
+     ```
+     . ~/.bash_profile
+     ```
 
 ### Download and install Puppet and Facter
 
@@ -51,6 +55,16 @@ See http://puppetlabs.com/misc/download-options
 ### Download and install Vagrant
 
 See https://www.vagrantup.com/downloads.html
+
+#### Install Vagrant Host Manager plugin
+
+Used to update hosts file on the host system.
+
+```
+vagrant plugin install vagrant-hostmanager
+```
+
+For information: https://github.com/smdahlen/vagrant-hostmanager
 
 Successfully tested environments
 --------------------------------
@@ -185,3 +199,12 @@ Todo
 
   * Resolve Packer message: Warning: Config file /etc/puppet/hiera.yaml not found, using Hiera defaults
   * Cache apt-get updates.
+
+Contributing
+------------
+
+1. Fork it
+1. Create your feature branch (git checkout -b my-new-feature)
+1. Commit your changes (git commit -am 'Add some feature')
+1. Push to the branch (git push origin my-new-feature)
+1. Create new Pull Request
