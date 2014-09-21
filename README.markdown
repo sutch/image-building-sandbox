@@ -40,10 +40,13 @@ For Mac OS X, Brew does not contain the latest version. Use the following instru
   1. download from http://www.packer.io/downloads.html
   1. extract to the /usr/local/packer directory
   1. update ~/.bash_profile to include the line
+     
      ```
      export PATH=$PATH:/usr/local/packer
      ```
+     
   1. execute the following command to source the .profile file to to effect for the current session
+     
      ```
      . ~/.bash_profile
      ```
