@@ -10,11 +10,11 @@ The intent is to build a solution to define machine images in a set of configura
 
 Has options to:
   1. build Ubuntu 14.04 Server for 64- and 32-bit architectures
-  2. build for VirtualBox and VMWare
+  1. build for VirtualBox and VMWare
 
 This builds:
   1. basic image, containing operating system, vagrant user, Puppet, and VirtualBox or VMWare additions
-  2. basic image plus Apache HTTP server
+  1. basic image plus Apache HTTP server
 
 
 Prerequistites
@@ -44,7 +44,7 @@ For Mac OS X, Brew does not contain the latest version. Use the following instru
      ```
      export PATH=$PATH:/usr/local/packer
      ```
-     
+
   1. execute the following command to source the .profile file to to effect for the current session
      
      ```
@@ -153,49 +153,68 @@ Test run of process
 -------------------
 
   1. Clone the repository
-```
-git clone https://github.com/sutch/image-building-sandbox.git
-```
-  2. Install Apache module from Puppet Forge:
-```
-puppet module install puppetlabs-apache
-```
-  3. Change working directory to image-building-sandbox
-  4. Build the basic image
-```
-packer build -only=ubuntu-14.04.amd64.virtualbox ubuntu-14.04.json
-```
-This creates a basic image as a Vagrant box in the build directory and as an OVF file in the output-ubuntu-14.04.amd64.virtualbox directory.
-  5. Edit source_path in ubuntu-14.04-apache.json to use the OVF file found in the output-ubunt-14.04.amd64.virtualbox directory (the timestamp changes at each build).
-  6. Build the image containing Apache using Puppet
-```
-packer build ubuntu-14.04-apache.json
-```
-  7. Initialize Vagrantfile for new image (box)
-```
-vagrant init ubuntu-14.04-apache build/ubuntu-14.04.amd64.apache.virtualbox.box  
-```
-  8. Run vitual machine
-```
-vagrant up
-```
-  9. SSH to virtual machine
-```
-vagrant ssh
-```
-This will create an SSH session to the virtual machine.
-  10. Test things on virtual machine (list contents of shared folder; check status of apache service; logout and end SSH session)
-```
-ls /vagrant
-/etc/init.d/apache2 status
-exit
-```
-  11. Halt virtual machine; destroy virtual machine; remove box from Vagrant
-```
-vagrant halt
-vagrant destroy
-vagrant box remove ubuntu-14.04-apache
-```
+
+     ```
+     git clone https://github.com/sutch/image-building-sandbox.git
+     ```
+
+  1. Install Apache module from Puppet Forge:
+     
+     ```
+     puppet module install puppetlabs-apache
+     ```
+
+  1. Change working directory to image-building-sandbox
+  1. Build the basic image
+
+     ```
+     packer build -only=ubuntu-14.04.amd64.virtualbox ubuntu-14.04.json
+     ```
+
+     This creates a basic image as a Vagrant box in the build directory and as an OVF file in the output-ubuntu-14.04.amd64.virtualbox directory.
+
+  1. Edit source_path in ubuntu-14.04-apache.json to use the OVF file found in the output-ubunt-14.04.amd64.virtualbox directory (the timestamp changes at each build).
+  1. Build the image containing Apache using Puppet
+
+     ```
+     packer build ubuntu-14.04-apache.json
+     ```
+
+  1. Initialize Vagrantfile for new image (box)
+
+     ```
+     vagrant init ubuntu-14.04-apache build/ubuntu-14.04.amd64.apache.virtualbox.box  
+     ```
+
+  1. Run vitual machine
+
+     ```
+     vagrant up
+     ```
+  
+  1. SSH to virtual machine
+
+     ```
+     vagrant ssh
+     ```
+
+     This will create an SSH session to the virtual machine.
+
+  1. Test things on virtual machine (list contents of shared folder; check status of apache service; logout and end SSH session)
+
+     ```
+     ls /vagrant
+     /etc/init.d/apache2 status
+     exit
+     ```
+
+  1. Halt virtual machine; destroy virtual machine; remove box from Vagrant
+
+     ```
+     vagrant halt
+     vagrant destroy
+     vagrant box remove ubuntu-14.04-apache
+     ```
 
 Todo
 ----
