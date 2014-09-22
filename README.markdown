@@ -33,6 +33,10 @@ Prerequistites
 
 See https://www.virtualbox.org/wiki/Downloads
 
+#### Adding path to Windows
+
+To allow VirtualBox's commands to function from the Command Prompt, add VirtualBox's folder (for example, C:\Program Files\Oracle\VirtualBox) to the Path environment variable.
+
 ### Download and install Packer
 
 See http://www.packer.io/downloads.html and http://www.packer.io/intro/getting-started/setup.html
@@ -110,7 +114,7 @@ To-be tested environments
 -------------------------
 
   * Windows 7 Professional, Service Pack 1
-    * VirtualBox 4.3.16
+    * VirtualBox test build r96191 (4.3.17) [https://www.virtualbox.org/download/testcase/VirtualBox-4.3.17-96191-Win.exe] -- note that several earlier builds fail to start virtual machines on this version of windows
     * Packer 0.7.1 (amd64)
     * Puppet 3.7.1-x64 (includes Facter 2.2.0)
     * Vagrant 1.6.5
@@ -148,10 +152,16 @@ The process is to first build a basic image containing just the operating system
 
 1. Rename the OVF file to remove the timestamp
 
-   To allow the OVF image to be used by other Packer templates, rename the OVF file to remove the timestamp:
+   To allow the OVF image to be used by other Packer templates, copy (or rename) the OVF file to a filename not containing the timestamp.
+
+   Mac OS X and Linux
    ```
-   mv output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox-*.ovf output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox.ovf
+   cp output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox-*.ovf output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox.ovf
    ```
+
+   ### Microsoft Windows 7 Workaround
+
+   Microsoft Windows 7 appears to have challenges with renaming OVF files.  Instead update the gitlab.json file to refer to the OVF file containing the timestamp.
 
 1. Download and install the Puppet manifests needed for GitLab from Puppet Forge (installs to HOME/puppet)
 
@@ -161,11 +171,13 @@ The process is to first build a basic image containing just the operating system
    puppet module install jfryman/nginx
    puppet module install fsalum-redis
    puppet module install puppetlabs-postgresql
-
+   ```
 
 1. Build the GitLab image
 
+   Note:  The following will fail if image-building-sandbox is not in your home directory. The gitlab.json file refers to ../.puppet/modules/ as the location for installed Puppet modules. Change the module_paths value in gitlab.json if this is not the relative path to the folder.
 
+   Build the image using:
    ```
    packer build gitlab.json
    ```
@@ -218,6 +230,8 @@ vagrant box remove gitlab
 ```
 
 ### Update the hosts file after shutting down a VM
+
+Useful when system (Windows) fails to correctly update the hosts file after 'vagrant up'.  Check /etc/hosts or C:\Windows\System32\drivers\etc\hosts for appropriate IP address / hostname pair.
 
 ```
 vagrant hostmanager
