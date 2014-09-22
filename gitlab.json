@@ -1,9 +1,9 @@
 {
   "builders": [
     {
-      "name": "ubuntu-14.04.amd64.apache.virtualbox",
+      "name": "gitlab.virtualbox",
       "type": "virtualbox-ovf",
-      "source_path": "output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox-1411007056.ovf",
+      "source_path": "output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox.ovf",
       "ssh_username": "vagrant",
       "ssh_password": "vagrant",
       "ssh_wait_timeout": "30s",
@@ -13,7 +13,7 @@
   "provisioners": [
     {
       "type": "puppet-masterless",
-      "manifest_file": "puppet/site.pp",
+      "manifest_file": "puppet/gitlab.pp",
       "module_paths": [
         "/Users/sutch/.puppet/modules/"
       ]
@@ -22,8 +22,7 @@
   "post-processors": [
     {
       "type": "vagrant",
-      "output": "build/{{.BuildName}}.box",
-      "keep_input_artifact": true
+      "output": "build/{{.BuildName}}.box"
     }
   ]
 }

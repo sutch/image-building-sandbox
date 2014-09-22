@@ -8,5 +8,4 @@ packer_cache/
 /.vagrant
 /box
 /dev
-/Vagrantfile
 /output-*

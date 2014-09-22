@@ -12,10 +12,9 @@ Has options to:
   1. build Ubuntu 14.04 Server for 64- and 32-bit architectures
   1. build for VirtualBox and VMWare
 
-This builds:
+Currently, image-building-sandbox builds:
   1. basic image, containing operating system, vagrant user, Puppet, and VirtualBox or VMWare additions
-  1. basic image plus Apache HTTP server
-
+  1. basic image with GitLab
 
 Prerequistites
 --------------
@@ -23,8 +22,9 @@ Prerequistites
   1. internet connectivity -- to obtain ISOs and system updates
   1. VirtualBox -- to build (and run) images
   1. Packer -- to manage the building of images
+  1. Puppet and Facter -- manage software and configuration of image
   1. Vagrant -- to manage images (boxes)
-  1. Vagrant Host Manager plugin
+  1. Vagrant Host Manager plugin -- to manage hosts files
   1. Git client
   1. SSH client
   1. text editor
@@ -35,7 +35,11 @@ See https://www.virtualbox.org/wiki/Downloads
 
 ### Download and install Packer
 
-For Mac OS X, Brew does not contain the latest version. Use the following instructions.
+See http://www.packer.io/downloads.html and http://www.packer.io/intro/getting-started/setup.html
+
+#### Mac OS X
+
+Brew does not contain the latest version. The following instructions will result in the latest version of Packer.
 
   1. download from http://www.packer.io/downloads.html
   1. extract to the /usr/local/packer directory
@@ -51,6 +55,12 @@ For Mac OS X, Brew does not contain the latest version. Use the following instru
      . ~/.bash_profile
      ```
 
+#### Microsoft Windows 7
+
+  1. download from http://www.packer.io/downloads.html
+  1. extract to %UserProfile%\Programs\Packer
+  1. edit the 'Path' environment variable for the current user to include the above folder, adding a semicolon to separate it from any existing folder (Control Panel > User Accounts > Change my environment variables)
+
 ### Download and install Puppet and Facter
 
 See http://puppetlabs.com/misc/download-options
@@ -61,160 +71,144 @@ See https://www.vagrantup.com/downloads.html
 
 #### Install Vagrant Host Manager plugin
 
-Used to update hosts file on the host system.
+Vagrant Host Manager is used to update the hosts file on the host and guest systems.
 
 ```
 vagrant plugin install vagrant-hostmanager
 ```
 
-For information: https://github.com/smdahlen/vagrant-hostmanager
+See https://github.com/smdahlen/vagrant-hostmanager#passwordless-sudo for instructions on how to allow hostmanager to make changes without asking for the password.
+
+For information see https://github.com/smdahlen/vagrant-hostmanager
 
 Successfully tested environments
 --------------------------------
 
-  * OS X 10.9.4
+  * OS X 10.9.5
     * VirtualBox 4.3.16
     * Packer 0.7.1
     * Puppet 3.7.1
+    * Facter 2.2.0
     * Vagrant 1.6.5
-  * Windows 7
-    * [TBD]
+    * Vagrant Host Manager 1.5.0
 
-The Process
------------
+To-be tested environments
+-------------------------
 
-### Build basic image 
+  * Windows 7 Professional, Service Pack 1
+    * VirtualBox 4.3.16
+    * Packer 0.7.1
+    * Puppet 3.7.1
+    * Facter 2.2.0
+    * Vagrant 1.6.5
+    * Vagrant Host Manager 1.5.0
 
-The basic image contains very little customization.  We break up the process so that this long running build can be done once and the build involving Puppet can be modified and tested fairly quickly.
+The Build Process - A Walk-Through
+----------------------------------
 
-Execute the following command to build only the 64-bit image for VirtualBox:
+A virtual machine image can be built once the prerequisites have been installed.  This walk-through will provide the steps for building the gitlab image.
+
+The process is to first build a basic image containing just the operating system with the vagrant user, Puppet, and virtualization add-ons (in this case, VirtualBox Add-ons).  After this image is created, it is used for further customizations using Puppet.  The process is split in this way to allow the basic image to be built once, saving time when building and testing new customizations, and to allow the second part of the process to be handled exclusively by Puppet in staging and production environments.
+
+1. Clone the repository
+
+   ```
+   git clone https://github.com/sutch/image-building-sandbox.git
+   ```
+
+1. Change working directory to image-building-sandbox
+
+1. Build the basic base image
+
+   This step builds the basic Vagrant box and the OVF image with Ubuntu Linux, the vagrant user, Puppet, and VirtualBox Add-ons. The base image Vagrant box is built in the build directory and as an OVF file is built in the output-ubuntu-14.04.amd64.virtualbox directory.
+
+   Execute the following command to build only the 64-bit image for VirtualBox:
+   ```
+   packer build -only=ubuntu-14.04.amd64.virtualbox ubuntu-14.04.json
+   ```
+
+   Note: To rebuild this basic image, remove the output folder output-ubuntu-14.04.amd64.virtualbox before executing the packer build command.
+
+1. Rename the OVF file to remove the timestamp
+
+   To allow the OVF image to be used by other Packer templates, rename the OVF file to remove the timestamp.  The rename-output.sh script can be used to perform this task:
+   ```
+   bash rename-output.sh
+   ```
+
+1. Download and install the Puppet manifests needed for GitLab from Puppet Forge (installs to HOME/puppet)
+
+   ```
+   puppet module install spuder-gitlab
+   puppet module install puppetlabs-ruby
+   puppet module install jfryman/nginx
+   puppet module install fsalum-redis
+   puppet module install puppetlabs-postgresql
+
+
+1. Build the GitLab image
+
+
+   ```
+   packer build gitlab.json
+   ```
+
+Using the Virtual Machine Image
+-------------------------------
+
+Described are common tasks for running the gitlab virtual machine image.
+
+### Run the virtual machine
+
 ```
-packer build -only=ubuntu-14.04.amd64.virtualbox ubuntu-14.04.json
+vagrant up gitlab
 ```
 
-To iterate, remove the output folder output-ubuntu-14.04.amd64.virtualbox before building again.
-
-### Build image with Apache
-
-After the above is complete, update ubuntu-14.04-apache.json to correct source_path for the timestamped OVF file and then execute the following: 
+### SSH to virtual machine
 
 ```
-packer build ubuntu-14.04-apache.json
+vagrant ssh
 ```
 
-To iterate, remove the output folder output-ubuntu-14.04.amd64.apache.virtualbox before building again.
+This will create an SSH session to the virtual machine.
 
-### Run basic image containing Apache
+### List contents of shared folder (from guest OS)
 
-To import the basic box containing Apache:
 ```
-vagrant init ubuntu-14.04-apache build/ubuntu-14.04.amd64.apache.virtualbox.box
-```
-
-Have VirtualBox display VM console by updating Vagrantfile with:
-```
-  config.vm.provider "virtualbox" do |vb|
-    vb.gui = true
-  end
+ls /vagrant
 ```
 
-Run the machine image:
+### Open GitLab in browser from host machine
+
+Browse to http://gitlab.localhost/
+
+### Halt the virtual machine
+
 ```
-vagrant up
+vagrant halt gitlab
 ```
 
-To halt the image:
-```
-vagrant halt
-```
+### Destroy the VirtualBox image
 
-To destroy the image:
 ```
 vagrant destroy
 ```
 
-To remove the box in order to import a newly built image:
-```
-vagrant box remove ubuntu-14.04-apache
-```
+### Remove the Vagrant image
 
-Other notes
------------
-
-To be integrated into instructions above:
-
-Install Puppet module for Apache from Puppet Forge (to HOME/puppet):
 ```
-puppet module install puppetlabs-apache
+vagrant box remove gitlab
 ```
 
+### Update the hosts file after shutting down a VM
 
-Test run of process
--------------------
-
-  1. Clone the repository
-
-     ```
-     git clone https://github.com/sutch/image-building-sandbox.git
-     ```
-
-  1. Install Apache module from Puppet Forge:
-     
-     ```
-     puppet module install puppetlabs-apache
-     ```
-
-  1. Change working directory to image-building-sandbox
-  1. Build the basic image
-
-     ```
-     packer build -only=ubuntu-14.04.amd64.virtualbox ubuntu-14.04.json
-     ```
-
-     This creates a basic image as a Vagrant box in the build directory and as an OVF file in the output-ubuntu-14.04.amd64.virtualbox directory.
-
-  1. Edit source_path in ubuntu-14.04-apache.json to use the OVF file found in the output-ubunt-14.04.amd64.virtualbox directory (the timestamp changes at each build).
-  1. Build the image containing Apache using Puppet
-
-     ```
-     packer build ubuntu-14.04-apache.json
-     ```
-
-  1. Initialize Vagrantfile for new image (box)
-
-     ```
-     vagrant init ubuntu-14.04-apache build/ubuntu-14.04.amd64.apache.virtualbox.box  
-     ```
-
-  1. Run vitual machine
-
-     ```
-     vagrant up
-     ```
-  
-  1. SSH to virtual machine
-
-     ```
-     vagrant ssh
-     ```
-
-     This will create an SSH session to the virtual machine.
-
-  1. Test things on virtual machine (list contents of shared folder; check status of apache service; logout and end SSH session)
-
-     ```
-     ls /vagrant
-     /etc/init.d/apache2 status
-     exit
-     ```
-
-  1. Halt virtual machine; destroy virtual machine; remove box from Vagrant
-
-     ```
-     vagrant halt
-     vagrant destroy
-     vagrant box remove ubuntu-14.04-apache
-     ```
+```
+vagrant hostmanager
+```
+- or, for example -
+```
+vagrant hostmanger gitlab
+```
 
 Todo
 ----
@@ -222,11 +216,23 @@ Todo
   * Resolve Packer message: Warning: Config file /etc/puppet/hiera.yaml not found, using Hiera defaults
   * Cache apt-get updates.
 
+References
+----------
+
+  * [Oracle VM VirtualBox User Manual](https://www.virtualbox.org/manual/UserManual.html)
+  * [Packer Documentation](http://www.packer.io/docs)
+  * [Puppet Labs Documentation](https://docs.puppetlabs.com/)
+  * [Vagrant Documentation](https://docs.vagrantup.com/v2/)
+  * [Vagrant Host Manager](https://github.com/smdahlen/vagrant-hostmanager) plugin
+
+### Windows specific
+  * [Git for Windows](http://msysgit.github.io/) (install using default options)
+
 Contributing
 ------------
 
-1. Fork it
-1. Create your feature branch (git checkout -b my-new-feature)
-1. Commit your changes (git commit -am 'Add some feature')
-1. Push to the branch (git push origin my-new-feature)
-1. Create new Pull Request
+  1. Fork it
+  1. Create your feature branch (git checkout -b my-new-feature)
+  1. Commit your changes (git commit -am 'Add some feature')
+  1. Push to the branch (git push origin my-new-feature)
+  1. Create new Pull Request
