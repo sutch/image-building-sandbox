@@ -65,11 +65,25 @@ Brew does not contain the latest version. The following instructions will result
 
 See http://puppetlabs.com/misc/download-options
 
+#### Mac OS X
+
+Download and install Puppet and Facter separately.
+
+#### Microsoft Windows 7
+
+One MSI installer installs both Puppet and Facter.
+
+Use default options when installing.
+
 ### Download and install Vagrant
 
 See https://www.vagrantup.com/downloads.html
 
-#### Install Vagrant Host Manager plugin
+#### Microsoft Windows 7
+
+Use default options when installing.
+
+### Install Vagrant Host Manager plugin
 
 Vagrant Host Manager is used to update the hosts file on the host and guest systems.
 
@@ -97,9 +111,8 @@ To-be tested environments
 
   * Windows 7 Professional, Service Pack 1
     * VirtualBox 4.3.16
-    * Packer 0.7.1
-    * Puppet 3.7.1
-    * Facter 2.2.0
+    * Packer 0.7.1 (amd64)
+    * Puppet 3.7.1-x64 (includes Facter 2.2.0)
     * Vagrant 1.6.5
     * Vagrant Host Manager 1.5.0
 
@@ -111,6 +124,8 @@ A virtual machine image can be built once the prerequisites have been installed.
 The process is to first build a basic image containing just the operating system with the vagrant user, Puppet, and virtualization add-ons (in this case, VirtualBox Add-ons).  After this image is created, it is used for further customizations using Puppet.  The process is split in this way to allow the basic image to be built once, saving time when building and testing new customizations, and to allow the second part of the process to be handled exclusively by Puppet in staging and production environments.
 
 1. Clone the repository
+
+   Clone the image-building-sandbox git repository from GitHub.
 
    ```
    git clone https://github.com/sutch/image-building-sandbox.git
@@ -127,13 +142,15 @@ The process is to first build a basic image containing just the operating system
    packer build -only=ubuntu-14.04.amd64.virtualbox ubuntu-14.04.json
    ```
 
+   This step downloads the necessary ISO(s) into the packer_cache directory. Maintain any ISOs in this folder to negate the need to download during future builds.
+
    Note: To rebuild this basic image, remove the output folder output-ubuntu-14.04.amd64.virtualbox before executing the packer build command.
 
 1. Rename the OVF file to remove the timestamp
 
-   To allow the OVF image to be used by other Packer templates, rename the OVF file to remove the timestamp.  The rename-output.sh script can be used to perform this task:
+   To allow the OVF image to be used by other Packer templates, rename the OVF file to remove the timestamp:
    ```
-   bash rename-output.sh
+   mv output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox-*.ovf output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox.ovf
    ```
 
 1. Download and install the Puppet manifests needed for GitLab from Puppet Forge (installs to HOME/puppet)
