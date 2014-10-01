@@ -121,21 +121,25 @@ The Build Process - A Walk-Through
 
 A virtual machine image can be built once the prerequisites have been installed.  This walk-through will provide the steps for building the gitlab image.
 
-The process is to first build a basic image containing just the operating system with the vagrant user, Puppet, and virtualization add-ons (in this case, VirtualBox Add-ons).  After this image is created, it is used for further customizations using Puppet.  The process is split in this way to allow the basic image to be built once, saving time when building and testing new customizations, and to allow the second part of the process to be handled exclusively by Puppet in staging and production environments.
+The process is to build a basic image containing the operating system, the vagrant user, Puppet and virtualization add-ons (in this case, VirtualBox Add-ons).  After this image is created, the basic image is used with Puppet to create an image to be used for a specific application.  The process is split this way to allow the basic image to be built once, saving time when building and testing new customizations, and to allow the second part of the process to be handled exclusively by Puppet in staging and production environments.
 
 1. Clone the repository
 
-   Clone the image-building-sandbox git repository from GitHub.
-
+   Execute the following command to clone the image-building-sandbox git repository from GitHub:
    ```
    git clone https://github.com/sutch/image-building-sandbox.git
    ```
 
 1. Change working directory to image-building-sandbox
 
+  Execute the following command:
+  ```
+  cd image-building-sandbox
+  ```
+
 1. Build the basic base image
 
-   This step builds the basic Vagrant box and the OVF image with Ubuntu Linux, the vagrant user, Puppet, and VirtualBox Add-ons. The base image Vagrant box is built in the build directory and as an OVF file is built in the output-ubuntu-14.04.amd64.virtualbox directory.
+   This step builds a basic Vagrant box and the OVF image containing Ubuntu Server 64-bit Linux, the vagrant user, Puppet, and VirtualBox Add-ons. The base image Vagrant box will be located in the build directory and will be located in the output-ubuntu-14.04.amd64.virtualbox directory as an OVF file.
 
    Execute the following command to build only the 64-bit image for VirtualBox:
    ```
@@ -150,14 +154,14 @@ The process is to first build a basic image containing just the operating system
 
    To allow the OVF image to be used by other Packer templates, copy (or rename) the OVF file to a filename not containing the timestamp.
 
-   Mac OS X and Linux
+   Mac OS X and Linux-- execute the following command to copy the OVF file:
    ```
    cp output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox-*.ovf output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox.ovf
    ```
 
    ### Microsoft Windows 7 Workaround
 
-   Microsoft Windows 7 appears to have challenges with renaming OVF files.  Instead update the gitlab.json file to refer to the OVF file containing the timestamp.
+   VirtualBox on Microsoft Windows 7 appears to have challenges when renaming OVF files.  Instead update the gitlab.json file to refer to the OVF file containing the timestamp.
 
 1. Download and install the Puppet manifests needed for GitLab from Puppet Forge (installs to .puppet in the current directory)
 
@@ -171,12 +175,17 @@ The process is to first build a basic image containing just the operating system
 
 1. Build the GitLab image
 
-   Note:  The following will fail if image-building-sandbox is not in your home directory. The gitlab.json file refers to .puppet/modules/ as the location for installed Puppet modules. Change the module_paths value in gitlab.json if this is not the relative path to the folder.
+   Note:  The following will fail if image-building-sandbox is not located in your home directory. The gitlab.json file refers to .puppet/modules/ as the location for installed Puppet modules. Change the module_paths value in gitlab.json if this is not the relative path to the folder.
 
-   Build the image using:
+   Execute the following command to build the image:
    ```
    packer build gitlab.json
    ```
+
+   Note:  The following two warning messages are expected:
+     * Warning: Setting templatedir is deprecated. See http://links.puppetlabs.com/env-settings-deprecations
+     * Warning: Config file /etc/puppet/hiera.yaml not found, using Hiera defaults
+
 
 Using the Virtual Machine Image
 -------------------------------
@@ -242,6 +251,7 @@ Todo
 
   * Resolve Packer message: Warning: Config file /etc/puppet/hiera.yaml not found, using Hiera defaults
   * Cache apt-get updates.
+  * Control for versions of modules installed from Puppet Forge (error occurred when update to GitLab module broke build--fixed by changing verson of GitLab specified in gitlab.pp)
 
 References
 ----------
