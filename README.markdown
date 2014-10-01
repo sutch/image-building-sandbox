@@ -212,6 +212,14 @@ This will create an SSH session to the virtual machine.
 ls /vagrant
 ```
 
+### Apply Puppet manifests locally
+
+The host machines image-building-sandbox directory is available to the virtual machine as the /vagrant directory. This allows us to apply Puppet manifests locally by executing the following command.
+
+```bash
+sudo puppet apply /vagrant/puppet/gitlab.pp --modulepath /vagrant/.puppet
+```
+
 ### Open GitLab in browser from host machine
 
 Browse to http://gitlab.localhost/
