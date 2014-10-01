@@ -126,14 +126,14 @@ The process is to build a basic image containing the operating system, the vagra
 1. Clone the repository
 
    Execute the following command to clone the image-building-sandbox git repository from GitHub:
-   ```
+   ```bash
    git clone https://github.com/sutch/image-building-sandbox.git
    ```
 
 1. Change working directory to image-building-sandbox
 
   Execute the following command:
-  ```
+  ```bash
   cd image-building-sandbox
   ```
 
@@ -142,7 +142,7 @@ The process is to build a basic image containing the operating system, the vagra
    This step builds a basic Vagrant box and the OVF image containing Ubuntu Server 64-bit Linux, the vagrant user, Puppet, and VirtualBox Add-ons. The base image Vagrant box will be located in the build directory and will be located in the output-ubuntu-14.04.amd64.virtualbox directory as an OVF file.
 
    Execute the following command to build only the 64-bit image for VirtualBox:
-   ```
+   ```bash
    packer build -only=ubuntu-14.04.amd64.virtualbox ubuntu-14.04.json
    ```
 
@@ -155,7 +155,7 @@ The process is to build a basic image containing the operating system, the vagra
    To allow the OVF image to be used by other Packer templates, copy (or rename) the OVF file to a filename not containing the timestamp.
 
    Mac OS X and Linux-- execute the following command to copy the OVF file:
-   ```
+   ```bash
    cp output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox-*.ovf output-ubuntu-14.04.amd64.virtualbox/packer-ubuntu-14.04.amd64.virtualbox.ovf
    ```
 
@@ -165,7 +165,7 @@ The process is to build a basic image containing the operating system, the vagra
 
 1. Download and install the Puppet manifests needed for GitLab from Puppet Forge (installs to .puppet in the current directory)
 
-   ```
+   ```bash
    puppet module install --target-dir .puppet spuder-gitlab
    puppet module install --target-dir .puppet puppetlabs-ruby
    puppet module install --target-dir .puppet jfryman/nginx
@@ -178,7 +178,7 @@ The process is to build a basic image containing the operating system, the vagra
    Note:  The following will fail if image-building-sandbox is not located in your home directory. The gitlab.json file refers to .puppet/modules/ as the location for installed Puppet modules. Change the module_paths value in gitlab.json if this is not the relative path to the folder.
 
    Execute the following command to build the image:
-   ```
+   ```bash
    packer build gitlab.json
    ```
 
@@ -194,13 +194,13 @@ Described are common tasks for running the gitlab virtual machine image.
 
 ### Run the virtual machine
 
-```
+```bash
 vagrant up gitlab
 ```
 
 ### SSH to virtual machine
 
-```
+```bash
 vagrant ssh
 ```
 
@@ -208,7 +208,7 @@ This will create an SSH session to the virtual machine.
 
 ### List contents of shared folder (from guest OS)
 
-```
+```bash
 ls /vagrant
 ```
 
@@ -218,19 +218,19 @@ Browse to http://gitlab.localhost/
 
 ### Halt the virtual machine
 
-```
+```bash
 vagrant halt gitlab
 ```
 
 ### Destroy the VirtualBox image
 
-```
+```bash
 vagrant destroy
 ```
 
 ### Remove the Vagrant image
 
-```
+```bash
 vagrant box remove gitlab
 ```
 
@@ -238,11 +238,11 @@ vagrant box remove gitlab
 
 Useful when system (Windows) fails to correctly update the hosts file after 'vagrant up'.  Check /etc/hosts or C:\Windows\System32\drivers\etc\hosts for appropriate IP address / hostname pair.
 
-```
+```bash
 vagrant hostmanager
 ```
 - or, for example -
-```
+```bash
 vagrant hostmanger gitlab
 ```
 
