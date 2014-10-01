@@ -5,6 +5,7 @@ packer_cache/
 *.box
 
 .DS_Store
+/.puppet
 /.vagrant
 /box
 /dev

@@ -159,19 +159,19 @@ The process is to first build a basic image containing just the operating system
 
    Microsoft Windows 7 appears to have challenges with renaming OVF files.  Instead update the gitlab.json file to refer to the OVF file containing the timestamp.
 
-1. Download and install the Puppet manifests needed for GitLab from Puppet Forge (installs to HOME/puppet)
+1. Download and install the Puppet manifests needed for GitLab from Puppet Forge (installs to .puppet in the current directory)
 
    ```
-   puppet module install spuder-gitlab
-   puppet module install puppetlabs-ruby
-   puppet module install jfryman/nginx
-   puppet module install fsalum-redis
-   puppet module install puppetlabs-postgresql
+   puppet module install --target-dir .puppet spuder-gitlab
+   puppet module install --target-dir .puppet puppetlabs-ruby
+   puppet module install --target-dir .puppet jfryman/nginx
+   puppet module install --target-dir .puppet fsalum-redis
+   puppet module install --target-dir .puppet puppetlabs-postgresql
    ```
 
 1. Build the GitLab image
 
-   Note:  The following will fail if image-building-sandbox is not in your home directory. The gitlab.json file refers to ../.puppet/modules/ as the location for installed Puppet modules. Change the module_paths value in gitlab.json if this is not the relative path to the folder.
+   Note:  The following will fail if image-building-sandbox is not in your home directory. The gitlab.json file refers to .puppet/modules/ as the location for installed Puppet modules. Change the module_paths value in gitlab.json if this is not the relative path to the folder.
 
    Build the image using:
    ```

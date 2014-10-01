@@ -15,7 +15,7 @@
       "type": "puppet-masterless",
       "manifest_file": "puppet/gitlab.pp",
       "module_paths": [
-        "../.puppet/modules/"
+        ".puppet/modules/"
       ]
     }
   ],
