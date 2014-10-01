@@ -252,8 +252,9 @@ Todo
   * Resolve Packer message: Warning: Config file /etc/puppet/hiera.yaml not found, using Hiera defaults
   * Cache apt-get updates.
   * Control for versions of modules installed from Puppet Forge (error occurred when update to GitLab module broke build--fixed by changing verson of GitLab specified in gitlab.pp)
-    * Execute to list modules and versions: puppet module list --modulepath .puppet
-    * Command line option to specify module version to install (puppet module install): --version VER
+    * To list modules and versions, execute: `puppet module list --modulepath .puppet`
+    * Command line option (for `puppet module install`) to specify module version to install: `--version VER`
+    * To update module, execute: `puppet module upgrade --modulepath .puppet NAME`
 
 References
 ----------
