@@ -30,7 +30,7 @@ The host machine requires:
 1. SSH client
 1. text editor
 
-See [[Preparing the host machine]] for instructions on preparing the host machine.
+See [[Preparing the host machine|Preparing-the-host-machine]] for instructions on preparing the host machine.
 
 Successfully tested environments
 --------------------------------
