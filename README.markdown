@@ -30,7 +30,7 @@ The host machine requires:
 1. SSH client
 1. text editor
 
-See [Preparing the host image](https://github.com/sutch/image-building-sandbox/wiki/Preparing-the-host-machine) for instructions on preparing the host machine.
+See [Preparing the host machine](https://github.com/sutch/image-building-sandbox/wiki/Preparing-the-host-machine) for instructions on preparing the host machine.
 
 Successfully tested environments
 --------------------------------
