@@ -19,85 +19,18 @@ Currently, image-building-sandbox builds:
 Prerequistites
 --------------
 
-  1. internet connectivity -- to obtain ISOs and system updates
-  1. VirtualBox -- to build (and run) images
-  1. Packer -- to manage the building of images
-  1. Puppet and Facter -- manage software and configuration of image
-  1. Vagrant -- to manage images (boxes)
-  1. Vagrant Host Manager plugin -- to manage hosts files
-  1. Git client
-  1. SSH client
-  1. text editor
+The host machine requires:
+1. internet connectivity
+1. VirtualBox
+1. Packer
+1. Puppet and Facter
+1. Vagrant 
+1. Vagrant Host Manager plugin
+1. Git client
+1. SSH client
+1. text editor
 
-### Download and install VirtualBox
-
-See https://www.virtualbox.org/wiki/Downloads
-
-#### Adding path to Windows
-
-To allow VirtualBox's commands to function from the Command Prompt, add VirtualBox's folder (for example, C:\Program Files\Oracle\VirtualBox) to the Path environment variable.
-
-### Download and install Packer
-
-See http://www.packer.io/downloads.html and http://www.packer.io/intro/getting-started/setup.html
-
-#### Mac OS X
-
-Brew does not contain the latest version. The following instructions will result in the latest version of Packer.
-
-  1. download from http://www.packer.io/downloads.html
-  1. extract to the /usr/local/packer directory
-  1. update ~/.bash_profile to include the line
-     
-     ```
-     export PATH=$PATH:/usr/local/packer
-     ```
-
-  1. execute the following command to source the .profile file to to effect for the current session
-     
-     ```
-     . ~/.bash_profile
-     ```
-
-#### Microsoft Windows 7
-
-  1. download from http://www.packer.io/downloads.html
-  1. extract to %UserProfile%\Programs\Packer
-  1. edit the 'Path' environment variable for the current user to include the above folder, adding a semicolon to separate it from any existing folder (Control Panel > User Accounts > Change my environment variables)
-
-### Download and install Puppet and Facter
-
-See http://puppetlabs.com/misc/download-options
-
-#### Mac OS X
-
-Download and install Puppet and Facter separately.
-
-#### Microsoft Windows 7
-
-One MSI installer installs both Puppet and Facter.
-
-Use default options when installing.
-
-### Download and install Vagrant
-
-See https://www.vagrantup.com/downloads.html
-
-#### Microsoft Windows 7
-
-Use default options when installing.
-
-### Install Vagrant Host Manager plugin
-
-Vagrant Host Manager is used to update the hosts file on the host and guest systems.
-
-```
-vagrant plugin install vagrant-hostmanager
-```
-
-See https://github.com/smdahlen/vagrant-hostmanager#passwordless-sudo for instructions on how to allow hostmanager to make changes without asking for the password.
-
-For information see https://github.com/smdahlen/vagrant-hostmanager
+See [Preparing the host image](https://github.com/sutch/image-building-sandbox/wiki/Preparing-the-host-machine) for instructions on preparing the host machine.
 
 Successfully tested environments
 --------------------------------
