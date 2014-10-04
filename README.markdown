@@ -30,6 +30,8 @@ The host machine requires:
   1. SSH client
   1. text editor
 
+See the wiki for detailed instructions on how to install VirtualBox, Packer, Puppet and Facter, Vagrant and Vagrant Host Manager.
+
 Successfully tested environments
 --------------------------------
 
