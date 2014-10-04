@@ -20,19 +20,15 @@ Prerequistites
 --------------
 
 The host machine requires:
-1. internet connectivity
-1. VirtualBox
-1. Packer
-1. Puppet and Facter
-1. Vagrant 
-1. Vagrant Host Manager plugin
-1. Git client
-1. SSH client
-1. text editor
-
-See [Preparing the host machine](https://github.com/sutch/image-building-sandbox/wiki/Preparing-the-host-machine) for instructions on preparing the host machine.
-
-See [The Build Process: A Sample Walk Through](/sutch/image-building-sandbox/wiki/The-Build-Process:-A-Sample-Walk-Through) for a description of the steps in building a virtual machine image.
+  1. internet connectivity
+  1. VirtualBox
+  1. Packer
+  1. Puppet and Facter
+  1. Vagrant 
+  1. Vagrant Host Manager plugin
+  1. Git client
+  1. SSH client
+  1. text editor
 
 Successfully tested environments
 --------------------------------
@@ -52,6 +48,11 @@ Note: These were tested against previous versions.
     * Puppet 3.7.1-x64 (includes Facter 2.2.0)
     * Vagrant 1.6.5
     * Vagrant Host Manager 1.5.0
+
+Documentation
+-------------
+
+See the [wiki](https://github.com/sutch/image-building-sandbox/wiki) for documentation.
 
 Todo
 ----
