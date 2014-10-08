@@ -44,7 +44,7 @@ Note: These were tested against previous versions.
     * Facter 2.2.0
     * Vagrant 1.6.5
     * Vagrant Host Manager 1.5.0
-  * Windows 7 Professional, Service Pack 1
+  * Windows 7 Professional, Service Pack 1 (tested on 10/8/2014)
     * VirtualBox test build r96191 (4.3.17) [https://www.virtualbox.org/download/testcase/VirtualBox-4.3.17-96191-Win.exe] -- note that several earlier builds fail to start virtual machines on this version of windows
     * Packer 0.7.1 (amd64)
     * Puppet 3.7.1-x64 (includes Facter 2.2.0)
