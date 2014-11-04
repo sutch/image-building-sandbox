@@ -37,9 +37,9 @@ Successfully tested environments
 
 Note: These were tested against previous versions.
 
-  * OS X 10.9.5
+  * OS X 10.10
     * VirtualBox 4.3.16
-    * Packer 0.7.1
+    * Packer 0.7.2
     * Puppet 3.7.1
     * Facter 2.2.0
     * Vagrant 1.6.5
